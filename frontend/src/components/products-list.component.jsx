@@ -42,7 +42,7 @@ class ProductsList extends Component {
       .then((response) => {
         console.log(response.data);
         this.setState({
-          products: this.state.products.filter((product) => product.id != id),
+          products: this.state.products.filter((product) => product.id !== id),
         });
       })
       .catch((e) => {
