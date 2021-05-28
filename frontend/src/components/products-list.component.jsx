@@ -1,153 +1,7 @@
 import React, { Component } from "react";
 import ProductDataService from "../services/product.service";
-// import { Link } from "react-router-dom";
-
-//  class ProductsList extends Component {
-
-//   onChangeSearchTitle(e) {
-//     const searchTitle = e.target.value;
-
-//     this.setState({
-//       searchTitle: searchTitle
-//     });
-//   }
-
-//   refreshList() {
-//     this.retrieveTutorials();
-//     this.setState({
-//       currentTutorial: null,
-//       currentIndex: -1
-//     });
-//   }
-
-//   setActiveTutorial(tutorial, index) {
-//     this.setState({
-//       currentTutorial: tutorial,
-//       currentIndex: index
-//     });
-//   }
-
-//   removeAllTutorials() {
-//     TutorialDataService.deleteAll()
-//       .then(response => {
-//         console.log(response.data);
-//         this.refreshList();
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
-
-//   searchTitle() {
-//     this.setState({
-//       currentTutorial: null,
-//       currentIndex: -1
-//     });
-
-//     TutorialDataService.findByTitle(this.state.searchTitle)
-//       .then(response => {
-//         this.setState({
-//           tutorials: response.data
-//         });
-//         console.log(response.data);
-//       })
-//       .catch(e => {
-//         console.log(e);
-//       });
-//   }
-
-//   render() {
-//     const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
-
-//     return (
-//       <div className="list row">
-//         <div className="col-md-8">
-//           <div className="input-group mb-3">
-//             <input
-//               type="text"
-//               className="form-control"
-//               placeholder="Search by title"
-//               value={searchTitle}
-//               onChange={this.onChangeSearchTitle}
-//             />
-//             <div className="input-group-append">
-//               <button
-//                 className="btn btn-outline-secondary"
-//                 type="button"
-//                 onClick={this.searchTitle}
-//               >
-//                 Search
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//         <div className="col-md-6">
-//           <h4>Tutorials List</h4>
-
-//           <ul className="list-group">
-//             {tutorials &&
-//               tutorials.map((tutorial, index) => (
-//                 <li
-//                   className={
-//                     "list-group-item " +
-//                     (index === currentIndex ? "active" : "")
-//                   }
-//                   onClick={() => this.setActiveTutorial(tutorial, index)}
-//                   key={index}
-//                 >
-//                   {tutorial.title}
-//                 </li>
-//               ))}
-//           </ul>
-
-//           <button
-//             className="m-3 btn btn-sm btn-danger"
-//             onClick={this.removeAllTutorials}
-//           >
-//             Remove All
-//           </button>
-//         </div>
-//         <div className="col-md-6">
-//           {currentTutorial ? (
-//             <div>
-//               <h4>Tutorial</h4>
-//               <div>
-//                 <label>
-//                   <strong>Title:</strong>
-//                 </label>{" "}
-//                 {currentTutorial.title}
-//               </div>
-//               <div>
-//                 <label>
-//                   <strong>Description:</strong>
-//                 </label>{" "}
-//                 {currentTutorial.description}
-//               </div>
-//               <div>
-//                 <label>
-//                   <strong>Status:</strong>
-//                 </label>{" "}
-//                 {currentTutorial.published ? "Published" : "Pending"}
-//               </div>
-
-//               <Link
-//                 to={"/tutorials/" + currentTutorial.id}
-//                 className="badge badge-warning"
-//               >
-//                 Edit
-//               </Link>
-//             </div>
-//           ) : (
-//             <div>
-//               <br />
-//               <p>Please click on a Tutorial...</p>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     );
-//   }
-// }
+import ProductInfo from "../components/product-info.component";
+import { Switch, Route, Link } from "react-router-dom";
 
 class ProductsList extends Component {
   constructor(props) {
@@ -195,6 +49,9 @@ class ProductsList extends Component {
         console.log(e);
       });
   }
+
+  updateProduct(id) {}
+
   render() {
     const { products } = this.state;
     return (
@@ -218,6 +75,14 @@ class ProductsList extends Component {
                 <td>{product.qty}</td>
                 <td>{product.description}</td>
                 <td>{product.manufacturer}</td>
+                <Link
+                  to={"/products/" + product.id}
+                  className="btn btn-warning"
+                  style={{ height: 32, width: 60, marginRight: 10 }}
+                >
+                  Edit
+                </Link>
+
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => this.deleteProduct(product.id)}
@@ -228,6 +93,12 @@ class ProductsList extends Component {
             ))}
           </tbody>
         </table>
+
+        <div className="container mt-3">
+          <Switch>
+            <Route path="/products/:id" component={ProductInfo} />
+          </Switch>
+        </div>
       </React.Fragment>
     );
   }

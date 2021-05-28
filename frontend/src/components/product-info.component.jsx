@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import ProductDataService from "../services/product.service";
 
-class AddProduct extends Component {
+class ProductInfo extends Component {
   constructor(props) {
     super(props);
-    this.addProduct = this.addProduct.bind(this);
     this.onChangeName = this.onChangeName.bind(this);
     this.onChangePrice = this.onChangePrice.bind(this);
     this.onChangeQty = this.onChangeQty.bind(this);
     this.onChangeDescription = this.onChangeDescription.bind(this);
     this.onChangeManufacturer = this.onChangeManufacturer.bind(this);
+    this.updateProduct = this.updateProduct.bind(this);
+    this.edited = false;
 
     this.state = {
       currentProduct: {
@@ -21,29 +22,30 @@ class AddProduct extends Component {
       },
     };
   }
-  addProduct() {
-    var data = {
-      name: this.state.currentProduct.name,
-      price: this.state.currentProduct.price,
-      qty: this.state.currentProduct.qty,
-      description: this.state.currentProduct.description,
-      manufacturer: this.state.currentProduct.manufacturer,
-    };
-    ProductDataService.create(data)
-      .then((response) => {
-        alert("Product added successfully.");
-        console.log("product added");
-        window.location.href = "/";
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+
+  updateProduct() {
+    if (this.edited) {
+      console.log("updating product");
+      const { currentProduct } = this.state;
+      ProductDataService.update(this.props.match.params.id, currentProduct)
+        .then((response) => {
+          console.log(response);
+          alert(`Product ${currentProduct.name} updated successfully.`);
+          window.location.href = "/";
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    } else {
+      alert("You have to make changes first before you can update.");
+    }
   }
 
   onChangeName(e) {
     const name = e.target.value;
 
     this.setState(function (prevState) {
+      this.edited = true;
       return {
         currentProduct: {
           ...prevState.currentProduct,
@@ -57,6 +59,7 @@ class AddProduct extends Component {
     const price = e.target.value;
 
     this.setState(function (prevState) {
+      this.edited = true;
       return {
         currentProduct: {
           ...prevState.currentProduct,
@@ -70,6 +73,7 @@ class AddProduct extends Component {
     const qty = e.target.value;
 
     this.setState(function (prevState) {
+      this.edited = true;
       return {
         currentProduct: {
           ...prevState.currentProduct,
@@ -83,6 +87,7 @@ class AddProduct extends Component {
     const description = e.target.value;
 
     this.setState(function (prevState) {
+      this.edited = true;
       return {
         currentProduct: {
           ...prevState.currentProduct,
@@ -96,6 +101,7 @@ class AddProduct extends Component {
     const manufacturer = e.target.value;
 
     this.setState(function (prevState) {
+      this.edited = true;
       return {
         currentProduct: {
           ...prevState.currentProduct,
@@ -105,18 +111,35 @@ class AddProduct extends Component {
     });
   }
 
+  getProduct(id) {
+    ProductDataService.get(id)
+      .then((response) => {
+        this.setState({
+          currentProduct: response.data,
+        });
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
+
+  componentDidMount() {
+    this.getProduct(this.props.match.params.id);
+  }
+
   render() {
     const { currentProduct } = this.state;
     return (
       <div>
-        <h3>This is the page for you to add a product.</h3>
-        <div class="form-group">
-          <label htmlFor="product-name">Product Name</label>
+        <h3>Updating product information</h3>
+        <div className="form-group">
+          <label htmlFor="edit-product-name">Product Name</label>
           <input
             style={{ width: 400 }}
             type="text"
-            name="product-name"
-            id="product-name"
+            name="edit-product-name"
+            id="edit-product-name"
             className="form-control"
             value={currentProduct.name}
             onChange={this.onChangeName}
@@ -124,13 +147,13 @@ class AddProduct extends Component {
           />
         </div>
 
-        <div class="form-group">
-          <label htmlFor="product-price">Product Price</label>
+        <div className="form-group">
+          <label htmlFor="edit-product-price">Product Price</label>
           <input
             style={{ width: 400 }}
             type="number"
-            name="product-price"
-            id="product-price"
+            name="edit-product-price"
+            id="edit-product-price"
             className="form-control"
             value={currentProduct.price}
             onChange={this.onChangePrice}
@@ -138,13 +161,13 @@ class AddProduct extends Component {
           />
         </div>
 
-        <div class="form-group">
+        <div className="edit-form-group">
           <label htmlFor="product-qty">Product Qty</label>
           <input
             style={{ width: 400 }}
             type="number"
-            name="product-qty"
-            id="product-qty"
+            name="edit-form-group"
+            id="edit-form-group"
             className="form-control"
             value={currentProduct.qty}
             onChange={this.onChangeQty}
@@ -152,13 +175,13 @@ class AddProduct extends Component {
           />
         </div>
 
-        <div class="form-group">
-          <label htmlFor="product-description">Product Description</label>
+        <div className="form-group">
+          <label htmlFor="edit-product-description">Product Description</label>
           <input
             style={{ width: 600 }}
             type="text"
-            name="product-description"
-            id="product-description"
+            name="edit-product-description"
+            id="edit-product-description"
             className="form-control"
             value={currentProduct.description}
             onChange={this.onChangeDescription}
@@ -166,13 +189,15 @@ class AddProduct extends Component {
           />
         </div>
 
-        <div class="form-group">
-          <label htmlFor="product-manufacturer">Product Manufacturer</label>
+        <div className="form-group">
+          <label htmlFor="edit-product-manufacturer">
+            Product Manufacturer
+          </label>
           <input
             style={{ width: 400 }}
             type="text"
-            name="product-manufacturer"
-            id="product-manufacturer"
+            name="edit-product-manufacturer"
+            id="edit-product-manufacturer"
             className="form-control"
             value={currentProduct.manufacturer}
             onChange={this.onChangeManufacturer}
@@ -180,12 +205,16 @@ class AddProduct extends Component {
           />
         </div>
 
-        <button class="btn btn-primary" onClick={this.addProduct}>
-          Add
+        <button
+          className="btn btn-primary"
+          onClick={this.updateProduct}
+          id="update-btn"
+        >
+          Update
         </button>
       </div>
     );
   }
 }
 
-export default AddProduct;
+export default ProductInfo;

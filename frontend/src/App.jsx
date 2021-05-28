@@ -3,9 +3,9 @@ import { Switch, Route, NavLink } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-// import Tutorial from "./components/tutorial.component";
-import ProductsList from "./components/products-list.component";
-import AddProduct from "./components/add-product.component";
+import ProductInfo from "./components/product-info.component";
+import ProductsList from "./components/products-list.component.jsx";
+import AddProduct from "./components/add-product.component.jsx";
 
 class App extends Component {
   render() {
@@ -33,32 +33,33 @@ class App extends Component {
                   color: "white",
                 }}
                 exact
-                to={"/modify"}
-                className="nav-link"
-              >
-                Modify Products
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                activeStyle={{
-                  backgroundColor: "orange",
-                  color: "white",
-                }}
-                exact
                 to={"/add"}
                 className="nav-link"
               >
                 Add Product
               </NavLink>
             </li>
+
+            {/* <li className="nav-item">
+              <NavLink
+                activeStyle={{
+                  backgroundColor: "orange",
+                  color: "white",
+                }}
+                exact
+                to={"/products/1"}
+                className="nav-link"
+              >
+                First product
+              </NavLink>
+            </li> */}
           </div>
         </nav>
         <div className="container mt-3">
           <Switch>
             <Route path="/" exact component={ProductsList} />
             <Route exact path="/add" component={AddProduct} />
-            {/* <Route path="/tutorials/:id" component={Tutorial} /> */}
+            <Route path="/products/:id" component={ProductInfo} />
           </Switch>
         </div>
       </div>
