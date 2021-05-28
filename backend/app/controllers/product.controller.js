@@ -3,7 +3,7 @@ const db = require("../models");
 const Product = db.product;
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Tutorial
+// Create and Save a new Product
 exports.create = (req, res) => {
   // Validate request
   console.log("request body is ", req);
@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     });
   }
   else {
-    // Create a Tutorial
+    // Create a Product
   const product = {
     name: req.body.name,
     price: req.body.price,
@@ -22,7 +22,7 @@ exports.create = (req, res) => {
     manufacturer: req.body.manufacturer
   };
   console.log("Name, price, qty, desc, manu: ");
-  // Save Tutorial in the database
+  // Save Product in the database
   Product.create(product)
     .then(data => {
       res.send(data);
@@ -37,7 +37,7 @@ exports.create = (req, res) => {
   console.log("Recently added product: ");
 };
 
-// Retrieve all Tutorials from the database.
+// Retrieve all Products from the database.
 exports.findAll = (req, res) => {
   // const name = req.query.name;
   // var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
@@ -57,7 +57,7 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Tutorial with an id
+// Find a single Product with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -72,7 +72,7 @@ exports.findOne = (req, res) => {
     });
 };
 
-// Update a Tutorial by the id in the request
+// Update a Product by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
@@ -97,7 +97,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Tutorial with the specified id in the request
+// Delete a Product with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -122,7 +122,7 @@ exports.delete = (req, res) => {
     });
 };
 
-// Delete all Tutorials from the database.
+// Delete all Products from the database.
 exports.deleteAll = (req, res) => {
   Product.destroy({
     where: {},
@@ -140,7 +140,7 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// find all published Tutorial
+// find all published Product
 // exports.findAllPublished = (req, res) => {
 //   Tutorial.findAll({ where: { published: true } })
 //     .then(data => {
