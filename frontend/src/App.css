@@ -33,6 +33,21 @@ body {
   
 }
 
+h3 {
+  color: #fff;
+  padding-bottom: 1.5rem;
+}
+
+.form-group {
+  color: #fff;
+  
+}
+
+label {
+  
+  font-weight: bold;
+}
+
 .list {
   text-align: left;
   max-width: 750px;
