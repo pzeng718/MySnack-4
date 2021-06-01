@@ -8,11 +8,11 @@ class ProductsList extends Component {
     super(props);
     this.retrieveProducts = this.retrieveProducts.bind(this);
     this.deleteProduct = this.deleteProduct.bind(this);
-    // this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
+    // this.onChangeSearch Title = this.onChangeSearchTitle.bind(this);
     // this.refreshList = this.refreshList.bind(this);
     // this.setActiveTutorial = this.setActiveTutorial.bind(this);
 
-    // this.searchTitle = this.searchTitle.bind(this);
+    this.searchTitle = this.searchTitle.bind(this);
   }
   state = {
     products: [],
@@ -23,6 +23,21 @@ class ProductsList extends Component {
   componentDidMount() {
     this.retrieveProducts();
   }
+
+    searchTitle(title) {
+    ProductDataService.findByTitle(title)
+        .then((response) => {
+            this.setState({
+                products: response.data.filter((data) => {
+                    if (data.name.toLowerCase().includes(title.toLowerCase())) // search term is case-sensitive
+                        return data
+                }),
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    }
 
   retrieveProducts() {
     ProductDataService.getAll()
@@ -56,6 +71,15 @@ class ProductsList extends Component {
     const { products } = this.state;
     return (
       <React.Fragment>
+      <div>
+          <input
+              type="text"
+              placeholder="Search by title"
+              onChange={(event) => {
+                this.searchTitle(event.target.value);
+              }}
+          />
+      </div>
         <p>Showing products in the database</p>
         <table className="table">
           <thead>
