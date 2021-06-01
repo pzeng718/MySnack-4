@@ -139,7 +139,7 @@ class AddProduct extends Component {
         </div>
 
         <div class="form-group">
-          <label htmlFor="product-qty">Product Qty</label>
+          <label htmlFor="product-qty">Product Quantity</label>
           <input
             style={{ width: 400 }}
             type="number"

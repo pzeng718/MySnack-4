@@ -70,17 +70,19 @@ class ProductsList extends Component {
   render() {
     const { products } = this.state;
     return (
-      <React.Fragment>
+      <div>
+        <p className="product-list-heading">Showing products in the database</p>
       <div>
           <input
+              className="search-box"
               type="text"
-              placeholder="Search by title"
+              placeholder="Type to search"
               onChange={(event) => {
                 this.searchTitle(event.target.value);
               }}
           />
       </div>
-        <p>Showing products in the database</p>
+        
         <table className="table">
           <thead>
             <tr>
@@ -123,7 +125,7 @@ class ProductsList extends Component {
             <Route path="/products/:id" component={ProductInfo} />
           </Switch>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
