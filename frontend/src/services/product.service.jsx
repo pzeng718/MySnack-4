@@ -28,6 +28,11 @@ class ProductDataService {
    findByTitle(title) {
      return http.get(`/products?title=${title}`);
   }
+
+  filterByPrice(min, max) {
+    return http.get(`/products?min_price=${min}&max_price=${max}`);
+  }
+
 }
 
 export default new ProductDataService();

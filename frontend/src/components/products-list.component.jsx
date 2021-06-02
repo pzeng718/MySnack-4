@@ -13,9 +13,11 @@ class ProductsList extends Component {
     // this.setActiveTutorial = this.setActiveTutorial.bind(this);
 
     this.searchTitle = this.searchTitle.bind(this);
+    this.filterPrice = this.filterPrice.bind(this);
   }
   state = {
     products: [],
+    min: "", max: ""
     // currentTutorial: null,
     // currentIndex: -1,
     // searchTitle: ""
@@ -30,6 +32,22 @@ class ProductsList extends Component {
             this.setState({
                 products: response.data.filter((data) => {
                     if (data.name.toLowerCase().includes(title.toLowerCase())) // search term is case-sensitive
+                        return data
+                }),
+            });
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    }
+
+    filterPrice(min, max) {
+      //console.log("Min: " + min + " Max: " + max);
+    ProductDataService.filterByPrice(min, max)
+        .then((response) => {
+            this.setState({
+                products: response.data.filter((data) => {
+                    if (data.price >= min && data.price <= max)
                         return data
                 }),
             });
@@ -72,7 +90,6 @@ class ProductsList extends Component {
     return (
       <div>
         <p className="product-list-heading">Showing products in the database</p>
-      <div>
           <input
               className="search-box"
               type="text"
@@ -81,8 +98,14 @@ class ProductsList extends Component {
                 this.searchTitle(event.target.value);
               }}
           />
-      </div>
-        
+          <form method="get"> Price
+              <input id="low-price" type="text" placeholder="Min" name="low-price"
+                     onChange={event => {this.setState({min: event.target.value }); }} />
+              <input id="high-price" type="text" placeholder="Max" name="high-price"
+                     onChange={event => {this.setState({max: event.target.value }); }} />
+              <button onClick={this.filterPrice(this.state.min, this.state.max)} >Go</button>
+          </form>
+
         <table className="table">
           <thead>
             <tr>
