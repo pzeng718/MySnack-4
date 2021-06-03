@@ -30,7 +30,7 @@ exports.create = (req, res) => {
       .catch((err) => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while creating the Tutorial.",
+            err.message || "Some error occurred while creating the Product.",
         });
       });
   }
@@ -48,7 +48,8 @@ exports.findAll = (req, res) => {
 
   if (minPrice && maxPrice) {
     Product.findAll({
-      where: { price: { [Op.between]: [0, 0] } },
+      // where: { price: { [Op.between]: [0, 0] } },
+      where: { price: { [Op.between]: [minPrice, maxPrice] } },
     }).then((data) => {
       res.send(data);
     });
@@ -66,7 +67,7 @@ exports.findAll = (req, res) => {
       .catch((err) => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while retrieving tutorials.",
+            err.message || "Some error occurred while retrieving products.",
         });
       });
   }
