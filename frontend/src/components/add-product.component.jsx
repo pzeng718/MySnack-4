@@ -134,7 +134,6 @@ class AddProduct extends Component {
             className="form-control"
             value={currentProduct.price}
             onChange={this.onChangePrice}
-            required
           />
         </div>
 
@@ -148,7 +147,6 @@ class AddProduct extends Component {
             className="form-control"
             value={currentProduct.qty}
             onChange={this.onChangeQty}
-            required
           />
         </div>
 
@@ -162,7 +160,6 @@ class AddProduct extends Component {
             className="form-control"
             value={currentProduct.description}
             onChange={this.onChangeDescription}
-            required
           />
         </div>
 
@@ -176,7 +173,6 @@ class AddProduct extends Component {
             className="form-control"
             value={currentProduct.manufacturer}
             onChange={this.onChangeManufacturer}
-            required
           />
         </div>
 

@@ -9,16 +9,20 @@ class ProductsList extends Component {
     this.retrieveProducts = this.retrieveProducts.bind(this);
     this.deleteProduct = this.deleteProduct.bind(this);
     this.searchTitle = this.searchTitle.bind(this);
-    this.handleChangeMin = this.handleChangeMin.bind(this);
-    this.handleChangeMax = this.handleChangeMax.bind(this);
+    this.handleChangeMinPrice = this.handleChangeMinPrice.bind(this);
+    this.handleChangeMaxPrice = this.handleChangeMaxPrice.bind(this);
+    this.handleChangeMinQty = this.handleChangeMinQty.bind(this);
+    this.handleChangeMaxQty = this.handleChangeMaxQty.bind(this);
     this.filterPrice = this.filterPrice.bind(this);
+    this.filterQty = this.filterQty.bind(this);
     this.resetState = this.resetState.bind(this);
   }
   state = {
     products: [],
-    min: "",
-    max: ""
-
+    minPrice: "",
+    maxPrice: "",
+    minQty: "",
+    maxQty: "",
   };
   componentDidMount() {
     this.retrieveProducts();
@@ -29,8 +33,9 @@ class ProductsList extends Component {
       .then((response) => {
         this.setState({
           products: response.data.filter((data) => {
-            if (data.name.toLowerCase().includes(title.toLowerCase())) // search term is case-sensitive
-              return data
+            if (data.name.toLowerCase().includes(title.toLowerCase()))
+              // search term is case-sensitive
+              return data;
           }),
         });
       })
@@ -39,27 +44,41 @@ class ProductsList extends Component {
       });
   }
 
-  handleChangeMin(event) {
-    console.log('e', event)
+  handleChangeMinPrice(event) {
+    console.log("e", event);
     this.setState({
       ...this.state,
-      min: event && event.target ? event.target.value : '',
+      minPrice: event && event.target ? event.target.value : "",
     });
   }
 
-  handleChangeMax(event) {
+  handleChangeMaxPrice(event) {
     this.setState({
       ...this.state,
-      max: event && event.target ? event.target.value : '',
+      maxPrice: event && event.target ? event.target.value : "",
+    });
+  }
+
+  handleChangeMinQty(event) {
+    this.setState({
+      ...this.state,
+      minQty: event && event.target ? event.target.value : "",
+    });
+  }
+
+  handleChangeMaxQty(event) {
+    this.setState({
+      ...this.state,
+      maxQty: event && event.target ? event.target.value : "",
     });
   }
 
   filterPrice(e) {
     e.preventDefault();
-    const min = this.state.min;
-    const max = this.state.max;
-    console.log("Min: " + min + " Max: " + max);
-    ProductDataService.filterByPrice(min, max)
+    const minPrice = this.state.minPrice;
+    const maxPrice = this.state.maxPrice;
+    console.log("Min Price: " + minPrice + " Max Price: " + maxPrice);
+    ProductDataService.filterByPrice(minPrice, maxPrice)
       .then((response) => {
         this.setState({
           ...this.state,
@@ -70,13 +89,32 @@ class ProductsList extends Component {
       .catch((e) => {
         console.log(e);
       });
+  }
 
+  filterQty(e) {
+    e.preventDefault();
+    const minQty = this.state.minQty;
+    const maxQty = this.state.maxQty;
+    console.log("Min Qty: " + minQty + " Max Qty: " + maxQty);
+    ProductDataService.filterByQty(minQty, maxQty)
+      .then((response) => {
+        this.setState({
+          ...this.state,
+          products: response.data,
+        });
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
   resetState() {
     this.setState({
-      min: '',
-      max: '',
+      minPrice: "",
+      maxPrice: "",
+      minQty: "",
+      maxQty: "",
     });
     this.retrieveProducts();
   }
@@ -107,7 +145,7 @@ class ProductsList extends Component {
       });
   }
 
-  updateProduct(id) { }
+  updateProduct(id) {}
 
   render() {
     const { products } = this.state;
@@ -123,31 +161,61 @@ class ProductsList extends Component {
           }}
         />
 
-
         <div className="filter-container">
           <form>
             <label className="filter-label">Min price</label>
-            <input type="text"
+            <input
+              type="text"
               className="filter-box"
               name="min-value"
-              //  placeholder="minimum price"  
-              value={this.state.min}
-              onChange={this.handleChangeMin}
-
+              //  placeholder="minimum price"
+              value={this.state.minPrice}
+              onChange={this.handleChangeMinPrice}
             />
             <label className="filter-label">Max price</label>
-            <input type="text"
+            <input
+              type="text"
               className="filter-box"
               name="max-value"
-              //  placeholder="maximum price" 
-              value={this.state.max}
-              onChange={this.handleChangeMax}
-
+              //  placeholder="maximum price"
+              value={this.state.maxPrice}
+              onChange={this.handleChangeMaxPrice}
             />
-            <button className="filter-btn" 
-                    onClick={this.filterPrice}>Filter</button>
-            <button className="filter-btn" 
-                    onClick={this.resetState}>Clear</button>
+            <button className="filter-btn" onClick={this.filterPrice}>
+              Filter
+            </button>
+            <button className="filter-btn" onClick={this.resetState}>
+              Clear
+            </button>
+          </form>
+        </div>
+
+        <div className="filter-container">
+          <form>
+            <label className="filter-label">Min Qty</label>
+            <input
+              type="text"
+              className="filter-box"
+              name="min-qty"
+              //  placeholder="minimum price"
+              value={this.state.minQty}
+              onChange={this.handleChangeMinQty}
+            />
+            <label className="filter-label">Max Qty</label>
+            <input
+              type="text"
+              className="filter-box"
+              name="max-qty"
+              //  placeholder="maximum price"
+              value={this.state.maxQty}
+              onChange={this.handleChangeMaxQty}
+            />
+            <button className="filter-btn" onClick={this.filterQty}>
+              Filter
+            </button>
+            <button className="filter-btn" onClick={this.resetState}>
+              Clear
+            </button>
           </form>
         </div>
         <table className="table">

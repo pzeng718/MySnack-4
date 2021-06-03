@@ -10,28 +10,27 @@ exports.create = (req, res) => {
   console.log("request body is ", req);
   if (isEmpty(req.body)) {
     res.status(400).send({
-      message: "Body Content can not be empty!"
+      message: "Body Content can not be empty!",
     });
-  }
-  else {
+  } else {
     // Create a Product
     const product = {
       name: req.body.name,
       price: req.body.price,
       qty: req.body.qty,
       description: req.body.description,
-      manufacturer: req.body.manufacturer
+      manufacturer: req.body.manufacturer,
     };
     console.log("Name, price, qty, desc, manu: ");
     // Save Product in the database
     Product.create(product)
-      .then(data => {
+      .then((data) => {
         res.send(data);
       })
-      .catch(err => {
+      .catch((err) => {
         res.status(500).send({
           message:
-            err.message || "Some error occurred while creating the Tutorial."
+            err.message || "Some error occurred while creating the Tutorial.",
         });
       });
   }
@@ -44,30 +43,33 @@ exports.findAll = (req, res) => {
 
   let minPrice = req.query.min_price;
   let maxPrice = req.query.max_price;
-  console.log("Min: ", minPrice)
-  console.log("Max ", maxPrice)
+  let minQty = req.query.min_qty;
+  let maxQty = req.query.max_qty;
 
   if (minPrice && maxPrice) {
     Product.findAll({
-      where: { price: { [Op.between]: [minPrice, maxPrice] } }
-
-    })
-      .then(data => {
-        res.send(data);
-      })
+      where: { price: { [Op.between]: [0, 0] } },
+    }).then((data) => {
+      res.send(data);
+    });
+  } else if (minQty && maxQty) {
+    Product.findAll({
+      where: { qty: { [Op.between]: [minQty, maxQty] } },
+    }).then((data) => {
+      res.send(data);
+    });
   } else {
     Product.findAll()
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials."
+      .then((data) => {
+        res.send(data);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving tutorials.",
+        });
       });
-    });
   }
-
 };
 
 // Find a single Product with an id
@@ -75,12 +77,12 @@ exports.findOne = (req, res) => {
   const id = req.params.id;
 
   Product.findByPk(id)
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Product with id=" + id
+        message: "Error retrieving Product with id=" + id,
       });
     });
 };
@@ -90,22 +92,22 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   Product.update(req.body, {
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Product was updated successfully."
+          message: "Product was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Product with id=${id}. Maybe Product was not found or req.body is empty!`
+          message: `Cannot update Product with id=${id}. Maybe Product was not found or req.body is empty!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error updating Product with id=" + id
+        message: "Error updating Product with id=" + id,
       });
     });
 };
@@ -115,22 +117,22 @@ exports.delete = (req, res) => {
   const id = req.params.id;
 
   Product.destroy({
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Product was deleted successfully!"
+          message: "Product was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Product with id=${id}.`
+          message: `Cannot delete Product with id=${id}.`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Product with id=" + id
+        message: "Could not delete Product with id=" + id,
       });
     });
 };
@@ -152,7 +154,3 @@ exports.delete = (req, res) => {
 //       });
 //     });
 // };
-
-
-
-

@@ -25,14 +25,17 @@ class ProductDataService {
     return http.delete(`/products`);
   }
 
-   findByTitle(title) {
-     return http.get(`/products?title=${title}`);
+  findByTitle(title) {
+    return http.get(`/products?title=${title}`);
   }
 
-  filterByPrice(min, max) {
-    return http.get(`/products?min_price=${min}&max_price=${max}`);
+  filterByPrice(minPrice, maxPrice) {
+    return http.get(`/products?min_price=${minPrice}&max_price=${maxPrice}`);
   }
 
+  filterByQty(minQty, maxQty) {
+    return http.get(`/products?min_qty=${minQty}&max_qty=${maxQty}`);
+  }
 }
 
 export default new ProductDataService();
