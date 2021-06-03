@@ -4,7 +4,7 @@ body {
 }
 
 #root {
-  height: 100vh;
+  height: 100%;
   
 }
 
@@ -38,6 +38,25 @@ h3 {
   padding-bottom: 1.5rem;
 }
 
+.filter-container {
+  margin: 2rem;
+}
+
+.filter-label {
+  margin-right: 1rem;
+  
+}
+
+.filter-box {
+  margin-right: 2rem;
+  outline: 0;
+}
+
+.filter-btn {
+  margin-right: .7rem;
+  background-color: orange;
+  font-weight: bold;
+}
 .form-group {
   color: #fff;
   
@@ -66,10 +85,11 @@ label {
 
 
 footer {
-  height: 20vh;
+  height: 15vh;
   background: #000;
   color: #fff;
   text-align: center;
   padding-top: 3.5rem;
   margin-bottom: 0;
+  
 }

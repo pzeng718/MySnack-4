@@ -8,54 +8,78 @@ class ProductsList extends Component {
     super(props);
     this.retrieveProducts = this.retrieveProducts.bind(this);
     this.deleteProduct = this.deleteProduct.bind(this);
-    // this.onChangeSearch Title = this.onChangeSearchTitle.bind(this);
-    // this.refreshList = this.refreshList.bind(this);
-    // this.setActiveTutorial = this.setActiveTutorial.bind(this);
-
     this.searchTitle = this.searchTitle.bind(this);
+    this.handleChangeMin = this.handleChangeMin.bind(this);
+    this.handleChangeMax = this.handleChangeMax.bind(this);
     this.filterPrice = this.filterPrice.bind(this);
+    this.resetState = this.resetState.bind(this);
   }
   state = {
     products: [],
-    min: "", max: ""
-    // currentTutorial: null,
-    // currentIndex: -1,
-    // searchTitle: ""
+    min: "",
+    max: ""
+
   };
   componentDidMount() {
     this.retrieveProducts();
   }
 
-    searchTitle(title) {
+  searchTitle(title) {
     ProductDataService.findByTitle(title)
-        .then((response) => {
-            this.setState({
-                products: response.data.filter((data) => {
-                    if (data.name.toLowerCase().includes(title.toLowerCase())) // search term is case-sensitive
-                        return data
-                }),
-            });
-        })
-        .catch((e) => {
-            console.log(e);
+      .then((response) => {
+        this.setState({
+          products: response.data.filter((data) => {
+            if (data.name.toLowerCase().includes(title.toLowerCase())) // search term is case-sensitive
+              return data
+          }),
         });
-    }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
 
-    filterPrice(min, max) {
-      //console.log("Min: " + min + " Max: " + max);
+  handleChangeMin(event) {
+    console.log('e', event)
+    this.setState({
+      ...this.state,
+      min: event && event.target ? event.target.value : '',
+    });
+  }
+
+  handleChangeMax(event) {
+    this.setState({
+      ...this.state,
+      max: event && event.target ? event.target.value : '',
+    });
+  }
+
+  filterPrice(e) {
+    e.preventDefault();
+    const min = this.state.min;
+    const max = this.state.max;
+    console.log("Min: " + min + " Max: " + max);
     ProductDataService.filterByPrice(min, max)
-        .then((response) => {
-            this.setState({
-                products: response.data.filter((data) => {
-                    if (data.price >= min && data.price <= max)
-                        return data
-                }),
-            });
-        })
-        .catch((e) => {
-            console.log(e);
+      .then((response) => {
+        this.setState({
+          ...this.state,
+          products: response.data,
         });
-    }
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+  }
+
+  resetState() {
+    this.setState({
+      min: '',
+      max: '',
+    });
+    this.retrieveProducts();
+  }
 
   retrieveProducts() {
     ProductDataService.getAll()
@@ -83,29 +107,49 @@ class ProductsList extends Component {
       });
   }
 
-  updateProduct(id) {}
+  updateProduct(id) { }
 
   render() {
     const { products } = this.state;
     return (
       <div>
         <p className="product-list-heading">Showing products in the database</p>
-          <input
-              className="search-box"
-              type="text"
-              placeholder="Type to search"
-              onChange={(event) => {
-                this.searchTitle(event.target.value);
-              }}
-          />
-          <form method="get"> Price
-              <input id="low-price" type="text" placeholder="Min" name="low-price"
-                     onChange={event => {this.setState({min: event.target.value }); }} />
-              <input id="high-price" type="text" placeholder="Max" name="high-price"
-                     onChange={event => {this.setState({max: event.target.value }); }} />
-              <button onClick={this.filterPrice(this.state.min, this.state.max)} >Go</button>
-          </form>
+        <input
+          className="search-box"
+          type="text"
+          placeholder="Type to search"
+          onChange={(event) => {
+            this.searchTitle(event.target.value);
+          }}
+        />
 
+
+        <div className="filter-container">
+          <form>
+            <label className="filter-label">Min price</label>
+            <input type="text"
+              className="filter-box"
+              name="min-value"
+              //  placeholder="minimum price"  
+              value={this.state.min}
+              onChange={this.handleChangeMin}
+
+            />
+            <label className="filter-label">Max price</label>
+            <input type="text"
+              className="filter-box"
+              name="max-value"
+              //  placeholder="maximum price" 
+              value={this.state.max}
+              onChange={this.handleChangeMax}
+
+            />
+            <button className="filter-btn" 
+                    onClick={this.filterPrice}>Filter</button>
+            <button className="filter-btn" 
+                    onClick={this.resetState}>Clear</button>
+          </form>
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -114,6 +158,7 @@ class ProductsList extends Component {
               <th>Quantity</th>
               <th>Description</th>
               <th>Manufacturer</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
